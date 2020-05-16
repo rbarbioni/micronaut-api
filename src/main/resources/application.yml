@@ -1,0 +1,45 @@
+micronaut:
+  application:
+    name: micronaut-api
+  io:
+    watch:
+      paths: src/main
+      restart: true
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+---
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:mysql://api:api@localhost:3307/api`}
+    driverClassName: ${JDBC_DRIVER:com.mysql.cj.jdbc.Driver}
+---
+jpa:
+  default:
+    packages-to-scan:
+      - 'br.com.rbarbioni.model'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+---
+metrics:
+  enabled: true
+
+---
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+  prometheus:
+    enabled: true
+    sensitive: false
+  info:
+    enabled: true
+    sensitive: false

@@ -1,0 +1,14 @@
+FROM oracle/graalvm-ce:20.0.0-java11 as graalvm
+
+WORKDIR /app
+COPY . /app
+
+RUN gu install native-image
+RUN native-image --no-server -cp build/libs/*-all.jar
+
+FROM frolvlad/alpine-glibc
+RUN apk update && apk add libstdc++
+
+EXPOSE 8080
+COPY --from=graalvm /app /app
+ENTRYPOINT ["/app","-Xmx68m"]

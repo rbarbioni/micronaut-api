@@ -1,0 +1,128 @@
+buildscript {
+    ext{
+        micronautVersion = "1.3.4"
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:+"
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.diffplug.gradle.spotless" version "3.28.1"
+    id "application"
+    id "java"
+    id "jacoco"
+}
+
+group 'br.com.rbarbioni'
+version '1.0.0-SNAPSHOT'
+mainClassName = "br.com.rbarbioni.Application"
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly
+}
+
+test.classpath += configurations.developmentOnly
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.add('-parameters')
+    options.fork = true
+    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
+}
+
+jar {
+    archivesBaseName="micronaut-api"
+    project.version=""
+}
+
+// use JUnit 5 platform
+test {
+    useJUnitPlatform()
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: $descriptor.className")
+    }
+}
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.add('-parameters')
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+run.classpath += configurations.developmentOnly
+
+spotless {
+    java {
+        googleJavaFormat('1.6')
+        target 'src/**/*.java'
+    }
+    format 'misc', {
+        target '**/*.xml', '**/*.gradle', '**/*.md', '**/.gitignore'
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacoco")
+    }
+}
+
+dependencies {
+    annotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
+    //tag::micronaut-graal[]
+    annotationProcessor "io.micronaut:micronaut-graal"
+    //end::micronaut-graal[]
+    //tag::svm[]
+    compileOnly "org.graalvm.nativeimage:svm"
+    //end::svm[]
+    //tag::swagger[]
+    annotationProcessor("io.micronaut.configuration:micronaut-openapi:1.4.5")
+    // end::swagger
+    implementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
+    implementation "io.micronaut:micronaut-inject"
+    implementation "io.micronaut:micronaut-validation"
+    implementation "io.micronaut:micronaut-runtime"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut:micronaut-management"
+    implementation "io.micronaut.configuration:micronaut-micrometer-registry-statsd"
+    implementation "io.micronaut.configuration:micronaut-micrometer-registry-prometheus"
+    implementation "io.swagger.core.v3:swagger-annotations"
+    implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
+    implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
+    implementation "mysql:mysql-connector-java:8.0.17"
+    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    testAnnotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testImplementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
+    testImplementation "org.mockito:mockito-core:3.3.3"
+    testRuntime "com.h2database:h2"
+}

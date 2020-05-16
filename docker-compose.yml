@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  micronaut-api:
+    build:
+      context: .
+    image: rbarbioni/micronaut-api
+    environment:
+      - JAVA_OPTS=-server -XX:+UseG1GC -Xmx128m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - "5005:5005"
+      - "8080:8080"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 200M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+  mysql:
+    container_name: mysql
+    image: mysql:8
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: api
+      MYSQL_USER: api
+      MYSQL_PASSWORD: api
+      MYSQL_ROOT_PASSWORD: api
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 300M
+        reservations:
+          cpus: '0.30'
+          memory: 250M
+      restart_policy:
+        condition: on-failure
