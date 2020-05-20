@@ -1,10 +1,13 @@
 # micronaut-api
 Micronaut Rest API Playground With Java 11, GraalVM, Docker, JPA, Gradle6, JUnit5, and More Features
 
+![CI](https://github.com/rbarbioni/micronaut-api/workflows/CI/badge.svg?branch=master)
+
 ## Application Checklist
 
 - [x] Micronaut 1.3.4
 - [x] Java 11
+- [x] Github Actions CI
 - [x] Postgres
 - [x] Graal VM 11
 - [x] Docker
