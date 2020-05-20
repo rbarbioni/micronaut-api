@@ -3,9 +3,7 @@ package br.com.rbarbioni.controller;
 import br.com.rbarbioni.model.Product;
 import br.com.rbarbioni.model.ResponseError;
 import br.com.rbarbioni.service.ProductService;
-import io.micrometer.core.annotation.Timed;
 import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
-import io.micronaut.configuration.metrics.micrometer.annotation.MircometerTimed;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -33,35 +31,29 @@ public class ProductController {
     this.productService = productService;
   }
 
-  @MircometerTimed
-  @Timed(value = "method.products.findAll", description = "Save alarm timer (Single)")
   @Get
   public Collection<Product> findAll() {
     return this.productService.findAll();
   }
 
-  @MircometerTimed
   @Get("/{id}")
   @Validated
   public Optional<Product> findById(@NotNull @PathVariable Long id) {
     return this.productService.findById(id);
   }
 
-  @MircometerTimed
   @Post
   @Validated
   public Product create(@Valid @Body Product product) {
     return this.productService.save(product);
   }
 
-  @MircometerTimed
   @Put("/{id}")
   @Validated
   public Product update(@NotNull @PathVariable Long id, @Valid @Body Product product) {
     return this.productService.update(id, product);
   }
 
-  @MircometerTimed
   @Delete("/{id}")
   @Validated
   @Status(HttpStatus.NO_CONTENT)

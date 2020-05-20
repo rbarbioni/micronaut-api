@@ -16,8 +16,14 @@ micronaut:
 ---
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:mysql://api:api@localhost:3307/api`}
-    driverClassName: ${JDBC_DRIVER:com.mysql.cj.jdbc.Driver}
+    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/api`}
+    username: ${JDBC_USER:api}
+    password: ${JDBC_PASS:api}
+    driverClassName: ${JDBC_DRIVER:org.postgresql.Driver}
+    initial-pool-size: 5
+    maximum-pool-size: 100
+    minimum-idle: 5
+
 ---
 jpa:
   default:

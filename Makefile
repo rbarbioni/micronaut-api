@@ -3,6 +3,14 @@ TAG:=build tag
 ENV:=env
 RELEASE_MESSAGE=$(shell git log `git describe --tags --abbrev=0`..master --oneline --no-decorate | sed 's/"/\\"/g' | awk '{printf "%s\\n", $$0}')
 
+.PHONY: clean
+clean:
+	./gradlew clean
+
+.PHONY: install
+install:
+	./gradlew build -x test -x spotlessCheck
+
 .PHONY: build
 build: spotless
 	./gradlew clean build test --tests "br.com.rbarbioni.unit*"
@@ -11,8 +19,8 @@ build: spotless
 build/docker: build
 	docker build -t rbarbioni/micronaut-api .
 
-.PHONY: test/all
-test/all:
+.PHONY: test
+test:
 	./gradlew test
 
 .PHONY: test/unit
@@ -20,8 +28,7 @@ test/unit:
 	./gradlew test --tests "br.com.rbarbioni.unit*" --info
 
 .PHONY: test/integration
-test/integration: run/docker-compose-structure
-	sleep 7
+test/integration:
 	./gradlew test --tests "br.com.rbarbioni.integration*" --info
 
 .PHONY: spotless
@@ -41,11 +48,15 @@ down:
 	docker-compose -f docker-compose.yml down --remove-orphans
 
 .PHONY: run
-run: build
+run: build run/docker-compose-structure
+	java -jar ${JAVA_OPTS} build/libs/micronaut-api-all.jar
+
+.PHONY: run/local
+run/local: build
 	java -jar ${JAVA_OPTS} build/libs/micronaut-api-all.jar
 
 .PHONY: run/gradle
-run/gradle:
+run/gradle: build
 	./gradlew run --continuous
 
 .PHONY: run/docker

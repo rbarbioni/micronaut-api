@@ -69,8 +69,11 @@ run.classpath += configurations.developmentOnly
 
 spotless {
     java {
+        target "**/*.java"
+        trimTrailingWhitespace()
+        removeUnusedImports()
+        endWithNewline()
         googleJavaFormat('1.6')
-        target 'src/**/*.java'
     }
     format 'misc', {
         target '**/*.xml', '**/*.gradle', '**/*.md', '**/.gitignore'
@@ -114,8 +117,10 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-annotations"
     implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
     implementation "io.micronaut.configuration:micronaut-jdbc-hikari"
-    implementation "mysql:mysql-connector-java:8.0.17"
+    implementation "io.sentry:sentry:1.7.30"
+    implementation "io.sentry:sentry-logback:1.+"
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    runtimeOnly "org.postgresql:postgresql:42.2.12.jre7"
     testAnnotationProcessor platform("io.micronaut:micronaut-bom:${micronautVersion}")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation platform("io.micronaut:micronaut-bom:${micronautVersion}")
@@ -124,5 +129,5 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.mockito:mockito-junit-jupiter:3.3.3"
     testImplementation "org.mockito:mockito-core:3.3.3"
-    testRuntime "com.h2database:h2"
+    testRuntimeOnly "com.h2database:h2"
 }

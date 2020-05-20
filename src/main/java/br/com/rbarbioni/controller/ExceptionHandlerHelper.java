@@ -10,11 +10,16 @@ import java.util.stream.StreamSupport;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ElementKind;
 import javax.validation.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExceptionHandlerHelper {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerHelper.class);
+
   @SuppressWarnings("rawtypes")
   public static HttpResponse<ResponseError> error(HttpRequest request, Throwable e) {
+    LOG.error(e.getMessage(), e);
     if (e instanceof ResourceNotFoundException) {
       return HttpResponse.notFound(new ResponseError(e.getMessage(), request.getPath()));
     }

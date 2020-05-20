@@ -5,48 +5,47 @@ services:
       context: .
     image: rbarbioni/micronaut-api
     environment:
-      - JAVA_OPTS=-server -XX:+UseG1GC -Xmx128m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - JAVA_OPTS=-server -XX:+UseG1GC -Xss256k -Xms128m -Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+      - JDBC_URL=jdbc:postgresql://db:5432/api
+      - JDBC_DRIVER=org.postgresql.Driver
+      - JDBC_USER=api
+      - JDBC_PASS=api
+      - SENTRY_DSN=${SENTRY_DSN}
     ports:
       - "5005:5005"
       - "8080:8080"
     depends_on:
-      - mysql
+      - db
     links:
-      - mysql
+      - db
     deploy:
       replicas: 1
       resources:
         limits:
-          cpus: '0.4'
-          memory: 200M
+          cpus: '0.5'
+          memory: 256M
         reservations:
-          cpus: '0.2'
-          memory: 128M
+          cpus: '0.5'
+          memory: 256M
       restart_policy:
         condition: on-failure
-  mysql:
-    container_name: mysql
-    image: mysql:8
-    command: ["--default-authentication-plugin=mysql_native_password"]
+
+  db:
+    image: postgres
     ports:
-      - 3307:3306
+      - "5432:5432"
     environment:
-      MYSQL_DATABASE: api
-      MYSQL_USER: api
-      MYSQL_PASSWORD: api
-      MYSQL_ROOT_PASSWORD: api
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: api
+      POSTGRES_DB: api
     deploy:
+      replicas: 1
       resources:
         limits:
-          cpus: '0.50'
-          memory: 300M
+          cpus: '0.5'
+          memory: 256M
         reservations:
-          cpus: '0.30'
-          memory: 250M
+          cpus: '0.5'
+          memory: 256M
       restart_policy:
         condition: on-failure
