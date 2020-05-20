@@ -1,7 +1,29 @@
+![CI](https://github.com/rbarbioni/micronaut-api/workflows/CI/badge.svg?branch=master)
 # micronaut-api
 Micronaut Rest API Playground With Java 11, GraalVM, Docker, JPA, Gradle6, JUnit5, and More Features
 
-![CI](https://github.com/rbarbioni/micronaut-api/workflows/CI/badge.svg?branch=master)
+## Micronaut
+Micronaut is a modern, JVM-based, full stack microservices framework designed for building modular, easily testable microservice applications.
+
+Micronaut is developed by the creators of the Grails framework and takes inspiration from lessons learnt over the years building real-world applications from monoliths to microservices using Spring, Spring Boot and Grails.
+
+Micronaut aims to provide all the tools necessary to build full-featured microservice applications, including:
+
+- Dependency Injection and Inversion of Control (IoC)
+- Sensible Defaults and Auto-Configuration
+- Configuration and Configuration Sharing
+- Service Discovery
+- HTTP Routing
+- HTTP Client with client-side load-balancing
+
+At the same time Micronaut aims to avoid the downsides of frameworks like Spring, Spring Boot and Grails by providing:
+- Fast startup time
+- Reduced memory footprint
+- Minimal use of reflection
+- Minimal use of proxies
+- Easy unit testing
+
+Source: https://docs.micronaut.io/latest/guide/index.html 
 
 ## Application Checklist
 
@@ -19,8 +41,11 @@ Micronaut Rest API Playground With Java 11, GraalVM, Docker, JPA, Gradle6, JUnit
 - [x] Unit-Tests
 - [x] Integration-Tests
 
+## Build and Startup
+![Startup](startup.png)
+
 ## Setup
-Download and configure GraalVM for your operacional system https://github.com/graalvm/graalvm-ce-builds/releases
+Download and configure GraalVM 20.x (Embbeded Java11) for your operacional system https://github.com/graalvm/graalvm-ce-builds/releases
 
 ## How To Build
 Build and install dependencies
