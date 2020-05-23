@@ -1,7 +1,6 @@
 package br.com.rbarbioni.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import io.micronaut.core.annotation.Introspected;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,6 +16,7 @@ public class Product {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonIgnore
   private Long id;
 
   @NotBlank
@@ -33,6 +33,7 @@ public class Product {
   private Double price;
 
   @Column(name = "created_at", nullable = false)
+  @JsonIgnore
   private final LocalDateTime createdAt;
 
   public Product() {
@@ -68,10 +69,13 @@ public class Product {
     return price;
   }
 
+  @JsonGetter
   public Long getId() {
     return id;
   }
 
+  @JsonGetter
+  @JsonFormat(shape = JsonFormat.Shape.STRING)
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }

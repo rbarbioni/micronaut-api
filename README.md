@@ -23,7 +23,7 @@ At the same time Micronaut aims to avoid the downsides of frameworks like Spring
 - Minimal use of proxies
 - Easy unit testing
 
-Source: https://docs.micronaut.io/latest/guide/index.html 
+Source: https://docs.micronaut.io/latest/guide/index.html
 
 ## Application Checklist
 

@@ -11,6 +11,7 @@ services:
       - JDBC_USER=api
       - JDBC_PASS=api
       - SENTRY_DSN=${SENTRY_DSN}
+      - ENV=docker
     ports:
       - "5005:5005"
       - "8080:8080"

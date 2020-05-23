@@ -15,6 +15,10 @@ install:
 build: spotless
 	./gradlew clean build test --tests "br.com.rbarbioni.unit*"
 
+.PHONY: build/only
+build/only:
+	./gradlew clean build -x test -x spotlessCheck
+
 .PHONY: build/docker
 build/docker: build
 	docker build -t rbarbioni/micronaut-api .
@@ -52,8 +56,8 @@ run: build run/docker-compose-structure
 	java -jar ${JAVA_OPTS} build/libs/micronaut-api-all.jar
 
 .PHONY: run/local
-run/local: build
-	java -jar ${JAVA_OPTS} build/libs/micronaut-api-all.jar
+run/local: build/only
+	java -jar -DENV=dev -DLEVEL=INFO build/libs/micronaut-api-all.jar
 
 .PHONY: run/gradle
 run/gradle: build

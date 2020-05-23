@@ -1,3 +1,8 @@
+environment: ${ENV:dev}
+logger:
+  levels:
+    ROOT: ${LEVEL:INFO}
+
 micronaut:
   application:
     name: micronaut-api
